@@ -1,0 +1,12 @@
+{
+  "resourceName": "contentStore",
+  "policyUUID": "d5e19cb6",
+  "bucketName": "amplifyreactgraphql-content-bucket",
+  "storageAccess": "auth",
+  "guestAccess": [],
+  "authAccess": [
+    "READ"
+  ],
+  "triggerFunction": "NONE",
+  "groupAccess": {}
+}
