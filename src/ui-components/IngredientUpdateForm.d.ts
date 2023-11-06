@@ -21,32 +21,26 @@ export declare type ValidationResponse = {
     errorMessage?: string;
 };
 export declare type ValidationFunction<T> = (value: T, validationResponse: ValidationResponse) => ValidationResponse | Promise<ValidationResponse>;
-export declare type NoteUpdateFormInputValues = {
+export declare type IngredientUpdateFormInputValues = {
     name?: string;
-    description?: string;
-    image?: string;
 };
-export declare type NoteUpdateFormValidationValues = {
+export declare type IngredientUpdateFormValidationValues = {
     name?: ValidationFunction<string>;
-    description?: ValidationFunction<string>;
-    image?: ValidationFunction<string>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
-export declare type NoteUpdateFormOverridesProps = {
-    NoteUpdateFormGrid?: PrimitiveOverrideProps<GridProps>;
+export declare type IngredientUpdateFormOverridesProps = {
+    IngredientUpdateFormGrid?: PrimitiveOverrideProps<GridProps>;
     name?: PrimitiveOverrideProps<TextFieldProps>;
-    description?: PrimitiveOverrideProps<TextFieldProps>;
-    image?: PrimitiveOverrideProps<TextFieldProps>;
 } & EscapeHatchProps;
-export declare type NoteUpdateFormProps = React.PropsWithChildren<{
-    overrides?: NoteUpdateFormOverridesProps | undefined | null;
+export declare type IngredientUpdateFormProps = React.PropsWithChildren<{
+    overrides?: IngredientUpdateFormOverridesProps | undefined | null;
 } & {
     id?: string;
-    note?: any;
-    onSubmit?: (fields: NoteUpdateFormInputValues) => NoteUpdateFormInputValues;
-    onSuccess?: (fields: NoteUpdateFormInputValues) => void;
-    onError?: (fields: NoteUpdateFormInputValues, errorMessage: string) => void;
-    onChange?: (fields: NoteUpdateFormInputValues) => NoteUpdateFormInputValues;
-    onValidate?: NoteUpdateFormValidationValues;
+    ingredient?: any;
+    onSubmit?: (fields: IngredientUpdateFormInputValues) => IngredientUpdateFormInputValues;
+    onSuccess?: (fields: IngredientUpdateFormInputValues) => void;
+    onError?: (fields: IngredientUpdateFormInputValues, errorMessage: string) => void;
+    onChange?: (fields: IngredientUpdateFormInputValues) => IngredientUpdateFormInputValues;
+    onValidate?: IngredientUpdateFormValidationValues;
 } & React.CSSProperties>;
-export default function NoteUpdateForm(props: NoteUpdateFormProps): React.ReactElement;
+export default function IngredientUpdateForm(props: IngredientUpdateFormProps): React.ReactElement;

@@ -9,12 +9,12 @@ import * as React from "react";
 import { Button, Flex, Grid, TextField } from "@aws-amplify/ui-react";
 import { fetchByPath, getOverrideProps, validateField } from "./utils";
 import { API } from "aws-amplify";
-import { getNote } from "../graphql/queries";
-import { updateNote } from "../graphql/mutations";
-export default function NoteUpdateForm(props) {
+import { getIngredientList } from "../graphql/queries";
+import { updateIngredientList } from "../graphql/mutations";
+export default function IngredientListUpdateForm(props) {
   const {
     id: idProp,
-    note: noteModelProp,
+    ingredientList: ingredientListModelProp,
     onSuccess,
     onError,
     onSubmit,
@@ -24,45 +24,49 @@ export default function NoteUpdateForm(props) {
     ...rest
   } = props;
   const initialValues = {
-    name: "",
-    description: "",
-    image: "",
+    recipe: "",
+    ingredient: "",
+    unit: "",
+    value: "",
   };
-  const [name, setName] = React.useState(initialValues.name);
-  const [description, setDescription] = React.useState(
-    initialValues.description
-  );
-  const [image, setImage] = React.useState(initialValues.image);
+  const [recipe, setRecipe] = React.useState(initialValues.recipe);
+  const [ingredient, setIngredient] = React.useState(initialValues.ingredient);
+  const [unit, setUnit] = React.useState(initialValues.unit);
+  const [value, setValue] = React.useState(initialValues.value);
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
-    const cleanValues = noteRecord
-      ? { ...initialValues, ...noteRecord }
+    const cleanValues = ingredientListRecord
+      ? { ...initialValues, ...ingredientListRecord }
       : initialValues;
-    setName(cleanValues.name);
-    setDescription(cleanValues.description);
-    setImage(cleanValues.image);
+    setRecipe(cleanValues.recipe);
+    setIngredient(cleanValues.ingredient);
+    setUnit(cleanValues.unit);
+    setValue(cleanValues.value);
     setErrors({});
   };
-  const [noteRecord, setNoteRecord] = React.useState(noteModelProp);
+  const [ingredientListRecord, setIngredientListRecord] = React.useState(
+    ingredientListModelProp
+  );
   React.useEffect(() => {
     const queryData = async () => {
       const record = idProp
         ? (
             await API.graphql({
-              query: getNote.replaceAll("__typename", ""),
+              query: getIngredientList.replaceAll("__typename", ""),
               variables: { id: idProp },
             })
-          )?.data?.getNote
-        : noteModelProp;
-      setNoteRecord(record);
+          )?.data?.getIngredientList
+        : ingredientListModelProp;
+      setIngredientListRecord(record);
     };
     queryData();
-  }, [idProp, noteModelProp]);
-  React.useEffect(resetStateValues, [noteRecord]);
+  }, [idProp, ingredientListModelProp]);
+  React.useEffect(resetStateValues, [ingredientListRecord]);
   const validations = {
-    name: [{ type: "Required" }],
-    description: [],
-    image: [],
+    recipe: [],
+    ingredient: [],
+    unit: [],
+    value: [],
   };
   const runValidationTasks = async (
     fieldName,
@@ -90,9 +94,10 @@ export default function NoteUpdateForm(props) {
       onSubmit={async (event) => {
         event.preventDefault();
         let modelFields = {
-          name,
-          description: description ?? null,
-          image: image ?? null,
+          recipe: recipe ?? null,
+          ingredient: ingredient ?? null,
+          unit: unit ?? null,
+          value: value ?? null,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -123,10 +128,10 @@ export default function NoteUpdateForm(props) {
             }
           });
           await API.graphql({
-            query: updateNote.replaceAll("__typename", ""),
+            query: updateIngredientList.replaceAll("__typename", ""),
             variables: {
               input: {
-                id: noteRecord.id,
+                id: ingredientListRecord.id,
                 ...modelFields,
               },
             },
@@ -141,86 +146,120 @@ export default function NoteUpdateForm(props) {
           }
         }
       }}
-      {...getOverrideProps(overrides, "NoteUpdateForm")}
+      {...getOverrideProps(overrides, "IngredientListUpdateForm")}
       {...rest}
     >
       <TextField
-        label="Name"
-        isRequired={true}
-        isReadOnly={false}
-        value={name}
-        onChange={(e) => {
-          let { value } = e.target;
-          if (onChange) {
-            const modelFields = {
-              name: value,
-              description,
-              image,
-            };
-            const result = onChange(modelFields);
-            value = result?.name ?? value;
-          }
-          if (errors.name?.hasError) {
-            runValidationTasks("name", value);
-          }
-          setName(value);
-        }}
-        onBlur={() => runValidationTasks("name", name)}
-        errorMessage={errors.name?.errorMessage}
-        hasError={errors.name?.hasError}
-        {...getOverrideProps(overrides, "name")}
-      ></TextField>
-      <TextField
-        label="Description"
+        label="Recipe"
         isRequired={false}
         isReadOnly={false}
-        value={description}
+        value={recipe}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
-              name,
-              description: value,
-              image,
+              recipe: value,
+              ingredient,
+              unit,
+              value,
             };
             const result = onChange(modelFields);
-            value = result?.description ?? value;
+            value = result?.recipe ?? value;
           }
-          if (errors.description?.hasError) {
-            runValidationTasks("description", value);
+          if (errors.recipe?.hasError) {
+            runValidationTasks("recipe", value);
           }
-          setDescription(value);
+          setRecipe(value);
         }}
-        onBlur={() => runValidationTasks("description", description)}
-        errorMessage={errors.description?.errorMessage}
-        hasError={errors.description?.hasError}
-        {...getOverrideProps(overrides, "description")}
+        onBlur={() => runValidationTasks("recipe", recipe)}
+        errorMessage={errors.recipe?.errorMessage}
+        hasError={errors.recipe?.hasError}
+        {...getOverrideProps(overrides, "recipe")}
       ></TextField>
       <TextField
-        label="Image"
+        label="Ingredient"
         isRequired={false}
         isReadOnly={false}
-        value={image}
+        value={ingredient}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
-              name,
-              description,
-              image: value,
+              recipe,
+              ingredient: value,
+              unit,
+              value,
             };
             const result = onChange(modelFields);
-            value = result?.image ?? value;
+            value = result?.ingredient ?? value;
           }
-          if (errors.image?.hasError) {
-            runValidationTasks("image", value);
+          if (errors.ingredient?.hasError) {
+            runValidationTasks("ingredient", value);
           }
-          setImage(value);
+          setIngredient(value);
         }}
-        onBlur={() => runValidationTasks("image", image)}
-        errorMessage={errors.image?.errorMessage}
-        hasError={errors.image?.hasError}
-        {...getOverrideProps(overrides, "image")}
+        onBlur={() => runValidationTasks("ingredient", ingredient)}
+        errorMessage={errors.ingredient?.errorMessage}
+        hasError={errors.ingredient?.hasError}
+        {...getOverrideProps(overrides, "ingredient")}
+      ></TextField>
+      <TextField
+        label="Unit"
+        isRequired={false}
+        isReadOnly={false}
+        value={unit}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              recipe,
+              ingredient,
+              unit: value,
+              value,
+            };
+            const result = onChange(modelFields);
+            value = result?.unit ?? value;
+          }
+          if (errors.unit?.hasError) {
+            runValidationTasks("unit", value);
+          }
+          setUnit(value);
+        }}
+        onBlur={() => runValidationTasks("unit", unit)}
+        errorMessage={errors.unit?.errorMessage}
+        hasError={errors.unit?.hasError}
+        {...getOverrideProps(overrides, "unit")}
+      ></TextField>
+      <TextField
+        label="Value"
+        isRequired={false}
+        isReadOnly={false}
+        type="number"
+        step="any"
+        value={value}
+        onChange={(e) => {
+          let value = isNaN(parseInt(e.target.value))
+            ? e.target.value
+            : parseInt(e.target.value);
+          if (onChange) {
+            const modelFields = {
+              recipe,
+              ingredient,
+              unit,
+              value: value,
+            };
+            const result = onChange(modelFields);
+            value = result?.value ?? value;
+          }
+          if (errors.value?.hasError) {
+            runValidationTasks("value", value);
+          }
+          setValue(value);
+        }}
+        onBlur={() => runValidationTasks("value", value)}
+        errorMessage={errors.value?.errorMessage}
+        hasError={errors.value?.hasError}
+        {...getOverrideProps(overrides, "value")}
       ></TextField>
       <Flex
         justifyContent="space-between"
@@ -233,7 +272,7 @@ export default function NoteUpdateForm(props) {
             event.preventDefault();
             resetStateValues();
           }}
-          isDisabled={!(idProp || noteModelProp)}
+          isDisabled={!(idProp || ingredientListModelProp)}
           {...getOverrideProps(overrides, "ResetButton")}
         ></Button>
         <Flex
@@ -245,7 +284,7 @@ export default function NoteUpdateForm(props) {
             type="submit"
             variation="primary"
             isDisabled={
-              !(idProp || noteModelProp) ||
+              !(idProp || ingredientListModelProp) ||
               Object.values(errors).some((e) => e?.hasError)
             }
             {...getOverrideProps(overrides, "SubmitButton")}

@@ -6,7 +6,8 @@
   "guestAccess": [],
   "authAccess": [
     "READ",
-    "CREATE_AND_UPDATE"
+    "CREATE_AND_UPDATE",
+    "DELETE"
   ],
   "triggerFunction": "NONE",
   "groupAccess": {}
